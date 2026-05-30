@@ -521,6 +521,7 @@
       width: 100%;
       min-height: 112px;
       max-height: 240px;
+      height: 112px;
       padding: 14px;
       overflow: auto;
       resize: vertical;
@@ -703,7 +704,11 @@
         border-radius: 0;
         border-left: 0;
         border-right: 0;
-        padding: 12px 14px 56px;
+        padding: 10px 14px 18px;
+      }
+
+      body.chrome-browser.fullscreen-active .app {
+        padding-bottom: 88px;
       }
 
       .dashboard {
@@ -732,15 +737,20 @@
       }
 
       .records-box {
-        min-height: 96px;
-        max-height: 128px;
+        min-height: 72px;
+        max-height: 72px;
+        height: 72px;
         overflow-y: auto;
       }
     }
 
     @media (max-width: 380px) and (max-height: 760px) {
       .app {
-        padding-bottom: 72px;
+        padding-bottom: 22px;
+      }
+
+      body.chrome-browser.fullscreen-active .app {
+        padding-bottom: 96px;
       }
 
       .topbar {
@@ -777,8 +787,9 @@
       }
 
       .records-box {
-        min-height: 82px;
-        max-height: 98px;
+        min-height: 64px;
+        max-height: 64px;
+        height: 64px;
       }
     }
 
@@ -1256,6 +1267,7 @@
 
     function applyPlatformClasses() {
       document.body.classList.toggle("ios-cover", isIosBrowser());
+      document.body.classList.toggle("chrome-browser", /Chrome|CriOS/.test(navigator.userAgent) && !/MicroMessenger/.test(navigator.userAgent));
     }
 
     function updateViewportHeight() {
