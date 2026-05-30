@@ -53,6 +53,11 @@
       place-items: start center;
     }
 
+    body.fullscreen-active {
+      padding: 0;
+      place-items: stretch;
+    }
+
     body.light {
       color-scheme: light;
       --bg: #eef4ff;
@@ -87,6 +92,13 @@
         var(--panel);
       box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(22px);
+    }
+
+    body.fullscreen-active .app {
+      width: 100%;
+      min-height: 100vh;
+      border: 0;
+      border-radius: 0;
     }
 
     .topbar {
@@ -445,6 +457,13 @@
       gap: 8px;
     }
 
+    .records-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
     .records-box {
       width: 100%;
       min-height: 112px;
@@ -465,6 +484,10 @@
     }
 
     .clear-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 10px;
+      font-size: 0.86rem;
       background: linear-gradient(180deg, #ff4b52, #ef3840);
       box-shadow:
         0 14px 28px rgba(244, 63, 70, 0.22),
@@ -658,8 +681,12 @@
         place-items: center;
       }
 
+      body.fullscreen-active {
+        padding: 0;
+      }
+
       .app {
-        width: min(980px, 100%);
+        width: 100%;
         min-height: auto;
         display: grid;
         grid-template-columns: minmax(230px, 0.82fr) minmax(330px, 1fr);
@@ -668,6 +695,11 @@
         align-items: center;
         padding: 10px 14px;
         border-radius: 16px;
+      }
+
+      body.fullscreen-active .app {
+        min-height: 100vh;
+        border-radius: 0;
       }
 
       .topbar {
@@ -760,6 +792,12 @@
         font-size: 0.78rem;
       }
 
+      .clear-btn {
+        min-height: 30px;
+        padding: 0 10px;
+        font-size: 0.76rem;
+      }
+
     }
   </style>
 </head>
@@ -829,11 +867,12 @@
       </div>
 
       <label class="records-field" for="recordsBox">
-        <span class="records-label">结果记录</span>
+        <span class="records-head">
+          <span class="records-label">结果记录</span>
+          <button class="btn clear-btn" id="clearBtn" type="button">清空记录</button>
+        </span>
         <textarea class="records-box" id="recordsBox" readonly placeholder="结果和时间会保留在这里"></textarea>
       </label>
-
-      <button class="btn clear-btn" id="clearBtn" type="button">清空记录</button>
     </section>
   </main>
 
@@ -1093,6 +1132,8 @@
     }
 
     function updateFullscreenText() {
+      document.body.classList.toggle("fullscreen-active", Boolean(document.fullscreenElement) || isStandaloneMode());
+
       if (isIosBrowser() && !isStandaloneMode() && !document.fullscreenEnabled) {
         fullscreenSwitch.checked = false;
         fullscreenNote.textContent = "请添加到主屏幕后使用";
@@ -1106,21 +1147,7 @@
       }
 
       fullscreenSwitch.checked = Boolean(document.fullscreenElement);
-      fullscreenNote.textContent = document.fullscreenElement ? "已全屏，正在使用横屏布局" : "全屏后尝试自动横屏";
-    }
-
-    async function lockLandscapeIfSupported() {
-      if (!screen.orientation || !screen.orientation.lock) {
-        fullscreenNote.textContent = "已全屏，当前浏览器不支持自动横屏";
-        return;
-      }
-
-      try {
-        await screen.orientation.lock("landscape");
-        fullscreenNote.textContent = "已全屏，横屏已锁定";
-      } catch (error) {
-        fullscreenNote.textContent = "已全屏，请打开系统自动旋转或手动横屏";
-      }
+      fullscreenNote.textContent = document.fullscreenElement ? "已全屏，旋转手机可切换横屏" : "隐藏浏览器界面，不强制横屏";
     }
 
     function unlockOrientationIfSupported() {
@@ -1148,13 +1175,12 @@
       try {
         if (fullscreenSwitch.checked) {
           await document.documentElement.requestFullscreen();
-          await lockLandscapeIfSupported();
         } else if (document.fullscreenElement) {
           unlockOrientationIfSupported();
           await document.exitFullscreen();
         }
       } catch (error) {
-        fullscreenNote.textContent = "当前浏览器无法全屏或自动横屏";
+        fullscreenNote.textContent = "当前浏览器无法全屏";
         fullscreenSwitch.checked = Boolean(document.fullscreenElement);
         window.setTimeout(updateFullscreenText, 1200);
       }
