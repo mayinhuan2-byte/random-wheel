@@ -596,6 +596,206 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
+    body.auth-locked .app,
+    body.auth-locked .settings-overlay {
+      visibility: hidden;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .auth-gate,
+    .clear-auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(96, 165, 250, 0.22), transparent 34%),
+        rgba(5, 12, 24, 0.92);
+    }
+
+    .auth-gate[hidden],
+    .clear-auth-overlay[hidden] {
+      display: none;
+    }
+
+    .full-records-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(2, 8, 18, 0.62);
+    }
+
+    .full-records-overlay[hidden] {
+      display: none;
+    }
+
+    .full-records-card {
+      width: min(520px, 100%);
+      max-height: min(82vh, 680px);
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid var(--line-bright);
+      border-radius: 22px;
+      color: var(--text);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 34%),
+        var(--panel);
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.38);
+      backdrop-filter: blur(24px);
+    }
+
+    .full-records-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .full-records-title {
+      margin: 0;
+      font-size: 1.18rem;
+      font-weight: 900;
+    }
+
+    .full-records-close {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      background: var(--panel-strong);
+      cursor: pointer;
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .full-records-list {
+      width: 100%;
+      min-height: 260px;
+      max-height: 58vh;
+      padding: 14px;
+      overflow: auto;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--text);
+      background: var(--panel-strong);
+      outline: none;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .auth-card,
+    .clear-auth-card {
+      width: min(430px, 100%);
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      border: 1px solid var(--line-bright);
+      border-radius: 22px;
+      color: var(--text);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 34%),
+        var(--panel);
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(24px);
+    }
+
+    .auth-title,
+    .clear-auth-title {
+      margin: 0;
+      font-size: 1.45rem;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .auth-subtitle,
+    .clear-auth-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .auth-form,
+    .clear-auth-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .auth-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .auth-field span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .auth-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: var(--text);
+      background: var(--panel-strong);
+      outline: none;
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .auth-input:focus {
+      border-color: var(--line-bright);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+    }
+
+    .auth-actions,
+    .clear-auth-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .auth-submit,
+    .clear-auth-submit,
+    .clear-auth-cancel {
+      min-height: 48px;
+      border: 0;
+      border-radius: 13px;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .auth-submit,
+    .clear-auth-submit {
+      background: linear-gradient(180deg, #69adff, #3b82f6);
+    }
+
+    .clear-auth-cancel {
+      background: var(--button-muted);
+    }
+
+    .auth-message,
+    .clear-auth-message {
+      min-height: 20px;
+      color: #fda4af;
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
     .settings-overlay {
       position: fixed;
       inset: 0;
@@ -677,6 +877,14 @@
       border-radius: 14px;
       background: var(--panel-strong);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .setting-action {
+      width: 100%;
+      color: var(--text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
     }
 
     .setting-copy {
@@ -1004,7 +1212,30 @@
     }
   </style>
 </head>
-<body>
+<body class="auth-locked">
+  <section class="auth-gate" id="authGate" aria-label="本地登录锁">
+    <div class="auth-card">
+      <h2 class="auth-title" id="authTitle">管理员登录</h2>
+      <p class="auth-subtitle" id="authSubtitle">请输入管理员账号和密码后进入罗盘。</p>
+      <form class="auth-form" id="authForm">
+        <label class="auth-field">
+          <span>管理员账号</span>
+          <input class="auth-input" id="authUsername" type="text" autocomplete="username" required>
+        </label>
+        <label class="auth-field">
+          <span>管理员密码</span>
+          <input class="auth-input" id="authPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <label class="auth-field" id="authConfirmWrap" hidden>
+          <span>确认密码</span>
+          <input class="auth-input" id="authConfirmPassword" type="password" autocomplete="new-password">
+        </label>
+        <button class="auth-submit" id="authSubmit" type="submit">登录</button>
+        <div class="auth-message" id="authMessage" role="status"></div>
+      </form>
+    </div>
+  </section>
+
   <main class="app">
     <header class="topbar">
       <h1 class="app-title">随机数罗盘</h1>
@@ -1087,6 +1318,13 @@
       </div>
 
       <div class="setting-list">
+        <button class="setting-row setting-action" id="fullRecordsBtn" type="button">
+          <span class="setting-copy">
+            <span class="setting-name">查看完整记录</span>
+            <span class="setting-note">查看每局的局号、结果、时间和旋转时长</span>
+          </span>
+        </button>
+
         <label class="setting-row">
           <span class="setting-copy">
             <span class="setting-name">深色模式</span>
@@ -1156,11 +1394,64 @@
     </section>
   </div>
 
+  <div class="full-records-overlay" id="fullRecordsOverlay" hidden>
+    <section class="full-records-card" role="dialog" aria-modal="true" aria-labelledby="fullRecordsTitle">
+      <div class="full-records-head">
+        <h2 class="full-records-title" id="fullRecordsTitle">完整结果记录</h2>
+        <button class="full-records-close" id="fullRecordsClose" type="button" aria-label="关闭完整记录">×</button>
+      </div>
+      <textarea class="full-records-list" id="fullRecordsList" readonly placeholder="暂无完整记录"></textarea>
+    </section>
+  </div>
+
+  <div class="clear-auth-overlay" id="clearAuthOverlay" hidden>
+    <section class="clear-auth-card" role="dialog" aria-modal="true" aria-labelledby="clearAuthTitle">
+      <h2 class="clear-auth-title" id="clearAuthTitle">验证管理员</h2>
+      <p class="clear-auth-subtitle">清空记录前需要再次输入管理员账号和密码。</p>
+      <form class="clear-auth-form" id="clearAuthForm">
+        <label class="auth-field">
+          <span>管理员账号</span>
+          <input class="auth-input" id="clearAuthUsername" type="text" autocomplete="username" required>
+        </label>
+        <label class="auth-field">
+          <span>管理员密码</span>
+          <input class="auth-input" id="clearAuthPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <div class="clear-auth-actions">
+          <button class="clear-auth-cancel" id="clearAuthCancel" type="button">取消</button>
+          <button class="clear-auth-submit" type="submit">验证</button>
+        </div>
+        <div class="clear-auth-message" id="clearAuthMessage" role="status"></div>
+      </form>
+    </section>
+  </div>
+
   <script>
     const STORAGE_KEY = "random-wheel-records";
+    const FULL_RECORDS_KEY = "random-wheel-full-records";
     const DURATION_KEY = "random-wheel-duration";
     const THEME_KEY = "random-wheel-theme";
+    const ROUND_KEY = "random-wheel-round-id";
+    const ADMIN_KEY = "random-wheel-admin-account";
+    const SESSION_KEY = "random-wheel-auth-session";
+    const TOUCH_ENTROPY_LIMIT = 96;
 
+    const authGate = document.getElementById("authGate");
+    const authForm = document.getElementById("authForm");
+    const authTitle = document.getElementById("authTitle");
+    const authSubtitle = document.getElementById("authSubtitle");
+    const authUsername = document.getElementById("authUsername");
+    const authPassword = document.getElementById("authPassword");
+    const authConfirmWrap = document.getElementById("authConfirmWrap");
+    const authConfirmPassword = document.getElementById("authConfirmPassword");
+    const authSubmit = document.getElementById("authSubmit");
+    const authMessage = document.getElementById("authMessage");
+    const clearAuthOverlay = document.getElementById("clearAuthOverlay");
+    const clearAuthForm = document.getElementById("clearAuthForm");
+    const clearAuthUsername = document.getElementById("clearAuthUsername");
+    const clearAuthPassword = document.getElementById("clearAuthPassword");
+    const clearAuthCancel = document.getElementById("clearAuthCancel");
+    const clearAuthMessage = document.getElementById("clearAuthMessage");
     const wheel = document.getElementById("wheel");
     const startBtn = document.getElementById("startBtn");
     const durationSelect = document.getElementById("durationSelect");
@@ -1168,6 +1459,10 @@
     const currentResult = document.getElementById("currentResult");
     const clearBtn = document.getElementById("clearBtn");
     const recordsBox = document.getElementById("recordsBox");
+    const fullRecordsBtn = document.getElementById("fullRecordsBtn");
+    const fullRecordsOverlay = document.getElementById("fullRecordsOverlay");
+    const fullRecordsClose = document.getElementById("fullRecordsClose");
+    const fullRecordsList = document.getElementById("fullRecordsList");
     const settingsBtn = document.getElementById("settingsBtn");
     const settingsOverlay = document.getElementById("settingsOverlay");
     const settingsClose = document.getElementById("settingsClose");
@@ -1189,7 +1484,12 @@
     let currentRotation = 0;
     let spinning = false;
     let records = loadRecords();
+    let fullRecords = loadFullRecords(records);
     let spinDuration = loadDuration();
+    let nextRoundId = loadRoundId();
+    let pendingDraw = null;
+    let touchEntropy = [];
+    let clearAuthResolve = null;
 
     function pad(value) {
       return String(value).padStart(2, "0");
@@ -1211,6 +1511,189 @@
       ].join("");
     }
 
+    async function sha256Text(text) {
+      if (!window.crypto?.subtle) {
+        throw new Error("当前浏览器不支持 SHA-256，本地登录锁无法使用。");
+      }
+
+      const encodedText = new TextEncoder().encode(text);
+      const hashBuffer = await window.crypto.subtle.digest("SHA-256", encodedText);
+      return bytesToHex(new Uint8Array(hashBuffer));
+    }
+
+    function loadAdminAccount() {
+      try {
+        const rawAdmin = localStorage.getItem(ADMIN_KEY);
+        const admin = rawAdmin ? JSON.parse(rawAdmin) : null;
+        return admin && admin.username && admin.passwordHash ? admin : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function saveAdminAccount(username, passwordHash) {
+      localStorage.setItem(ADMIN_KEY, JSON.stringify({
+        username,
+        passwordHash,
+        createdAt: formatDateTime(new Date())
+      }));
+    }
+
+    function isAuthenticated() {
+      return sessionStorage.getItem(SESSION_KEY) === "unlocked";
+    }
+
+    function unlockApp() {
+      sessionStorage.setItem(SESSION_KEY, "unlocked");
+      document.body.classList.remove("auth-locked");
+      authGate.hidden = true;
+    }
+
+    function lockApp() {
+      sessionStorage.removeItem(SESSION_KEY);
+      document.body.classList.add("auth-locked");
+      authGate.hidden = false;
+    }
+
+    function showRegisterMode() {
+      lockApp();
+      authTitle.textContent = "创建管理员账号";
+      authSubtitle.textContent = "首次启动需要创建本地管理员账号，密码只保存 SHA-256 哈希。";
+      authConfirmWrap.hidden = false;
+      authConfirmPassword.required = true;
+      authPassword.autocomplete = "new-password";
+      authSubmit.textContent = "创建账号";
+      authMessage.textContent = "";
+      authForm.dataset.mode = "register";
+    }
+
+    function showLoginMode(message = "") {
+      lockApp();
+      authTitle.textContent = "管理员登录";
+      authSubtitle.textContent = "请输入管理员账号和密码后进入罗盘。";
+      authConfirmWrap.hidden = true;
+      authConfirmPassword.required = false;
+      authConfirmPassword.value = "";
+      authPassword.autocomplete = "current-password";
+      authSubmit.textContent = "登录";
+      authMessage.textContent = message;
+      authForm.dataset.mode = "login";
+    }
+
+    function initializeAuthGate() {
+      const admin = loadAdminAccount();
+
+      if (!admin) {
+        showRegisterMode();
+        return;
+      }
+
+      if (isAuthenticated()) {
+        unlockApp();
+        return;
+      }
+
+      showLoginMode();
+    }
+
+    async function verifyAdminCredentials(username, password) {
+      const admin = loadAdminAccount();
+      if (!admin) return false;
+
+      const passwordHash = await sha256Text(password);
+      return username === admin.username && passwordHash === admin.passwordHash;
+    }
+
+    async function handleRegister() {
+      const username = authUsername.value.trim();
+      const password = authPassword.value;
+      const confirmPassword = authConfirmPassword.value;
+
+      if (!username || !password || !confirmPassword) {
+        authMessage.textContent = "请填写账号、密码和确认密码。";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        authMessage.textContent = "两次输入的密码不一致。";
+        return;
+      }
+
+      try {
+        const passwordHash = await sha256Text(password);
+        saveAdminAccount(username, passwordHash);
+        authPassword.value = "";
+        authConfirmPassword.value = "";
+        sessionStorage.removeItem(SESSION_KEY);
+        showLoginMode("管理员账号已创建，请登录。");
+      } catch (error) {
+        authMessage.textContent = error.message || "创建管理员账号失败。";
+      }
+    }
+
+    async function handleLogin() {
+      const username = authUsername.value.trim();
+      const password = authPassword.value;
+
+      if (!username || !password) {
+        authMessage.textContent = "请输入管理员账号和密码。";
+        return;
+      }
+
+      try {
+        if (await verifyAdminCredentials(username, password)) {
+          authPassword.value = "";
+          authMessage.textContent = "";
+          unlockApp();
+          return;
+        }
+
+        authMessage.textContent = "账号或密码错误。";
+      } catch (error) {
+        authMessage.textContent = error.message || "登录验证失败。";
+      }
+    }
+
+    function requestClearRecordsAuth() {
+      return new Promise((resolve) => {
+        clearAuthResolve = resolve;
+        clearAuthMessage.textContent = "";
+        clearAuthUsername.value = "";
+        clearAuthPassword.value = "";
+        clearAuthOverlay.hidden = false;
+        window.setTimeout(() => clearAuthUsername.focus(), 0);
+      });
+    }
+
+    function closeClearAuth(result) {
+      clearAuthOverlay.hidden = true;
+      clearAuthUsername.value = "";
+      clearAuthPassword.value = "";
+      clearAuthMessage.textContent = "";
+
+      if (clearAuthResolve) {
+        clearAuthResolve(result);
+        clearAuthResolve = null;
+      }
+    }
+
+    async function handleClearAuthSubmit(event) {
+      event.preventDefault();
+
+      try {
+        const verified = await verifyAdminCredentials(clearAuthUsername.value.trim(), clearAuthPassword.value);
+
+        if (!verified) {
+          clearAuthMessage.textContent = "账号或密码错误，已取消清空。";
+          return;
+        }
+
+        closeClearAuth(true);
+      } catch (error) {
+        clearAuthMessage.textContent = error.message || "验证失败。";
+      }
+    }
+
     function loadRecords() {
       try {
         const rawRecords = localStorage.getItem(STORAGE_KEY);
@@ -1225,9 +1708,149 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
+    function loadFullRecords(fallbackRecords = []) {
+      try {
+        const rawRecords = localStorage.getItem(FULL_RECORDS_KEY);
+        const parsedRecords = rawRecords ? JSON.parse(rawRecords) : null;
+
+        if (Array.isArray(parsedRecords)) {
+          return parsedRecords;
+        }
+      } catch (error) {
+        // Fall back to the existing simple records if the full history is unavailable.
+      }
+
+      return fallbackRecords.map((record) => ({
+        roundId: record.roundId || "-",
+        number: record.number,
+        time: record.time,
+        duration: record.duration || loadDuration()
+      }));
+    }
+
+    function saveFullRecords() {
+      localStorage.setItem(FULL_RECORDS_KEY, JSON.stringify(fullRecords));
+    }
+
+    function renderFullRecords() {
+      fullRecordsList.value = fullRecords
+        .map((record) => [
+          `第${record.roundId || "-"}局`,
+          `结果：${record.number}`,
+          `时间：${record.time}`,
+          `旋转时长：${record.duration || "-"}秒`
+        ].join("\n"))
+        .join("\n\n");
+      fullRecordsList.scrollTop = 0;
+    }
+
+    function openFullRecords() {
+      if (!isAuthenticated()) {
+        showLoginMode("请先登录后再操作。");
+        return;
+      }
+
+      closeSettings();
+      renderFullRecords();
+      fullRecordsOverlay.hidden = false;
+    }
+
+    function closeFullRecords() {
+      fullRecordsOverlay.hidden = true;
+    }
+
     function loadDuration() {
       const storedDuration = Number(localStorage.getItem(DURATION_KEY));
       return [1, 2, 3, 4, 5, 6, 8].includes(storedDuration) ? storedDuration : 3;
+    }
+
+    function loadRoundId() {
+      const storedRoundId = Number(localStorage.getItem(ROUND_KEY));
+      return Number.isInteger(storedRoundId) && storedRoundId > 0 ? storedRoundId : 1;
+    }
+
+    function saveRoundId(roundId) {
+      localStorage.setItem(ROUND_KEY, String(roundId));
+    }
+
+    function collectTouchEntropy(event) {
+      const touches = Array.from(event.changedTouches || []);
+      const now = Date.now();
+      const perfNow = performance.now();
+
+      touches.forEach((touch) => {
+        touchEntropy.push({
+          type: event.type,
+          x: Number(touch.clientX.toFixed(2)),
+          y: Number(touch.clientY.toFixed(2)),
+          pageX: Number(touch.pageX.toFixed(2)),
+          pageY: Number(touch.pageY.toFixed(2)),
+          radiusX: touch.radiusX || 0,
+          radiusY: touch.radiusY || 0,
+          force: touch.force || 0,
+          time: now,
+          perf: perfNow
+        });
+      });
+
+      if (touchEntropy.length > TOUCH_ENTROPY_LIMIT) {
+        touchEntropy = touchEntropy.slice(-TOUCH_ENTROPY_LIMIT);
+      }
+    }
+
+    function generateServerSeed() {
+      const bytes = new Uint8Array(32);
+      window.crypto.getRandomValues(bytes);
+      return bytesToHex(bytes);
+    }
+
+    function bytesToHex(bytes) {
+      return Array.from(bytes)
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    function hashBytesToResult(bytes) {
+      let hashValue = 0n;
+
+      bytes.forEach((byte) => {
+        hashValue = (hashValue << 8n) + BigInt(byte);
+      });
+
+      return Number(hashValue % 4n) + 1;
+    }
+
+    async function createLocalDraw() {
+      if (!window.crypto?.getRandomValues || !window.crypto?.subtle) {
+        throw new Error("当前浏览器不支持本地加密随机数或 SHA-256。");
+      }
+
+      const roundId = nextRoundId;
+      const serverSeed = generateServerSeed();
+      const payload = JSON.stringify({
+        roundId,
+        serverSeed,
+        touchEntropy: touchEntropy.slice(),
+        now: Date.now(),
+        perf: performance.now()
+      });
+      const encodedPayload = new TextEncoder().encode(payload);
+      const hashBuffer = await window.crypto.subtle.digest("SHA-256", encodedPayload);
+      const hashBytes = new Uint8Array(hashBuffer);
+      const hash = bytesToHex(hashBytes);
+      const result = hashBytesToResult(hashBytes);
+
+      nextRoundId = roundId + 1;
+      saveRoundId(nextRoundId);
+      touchEntropy = [];
+
+      return {
+        roundId,
+        serverSeed,
+        hash,
+        hashBytes,
+        result
+      };
     }
 
     function updateDuration(value) {
@@ -1274,13 +1897,29 @@
       return 4;
     }
 
-    function addRecord(number) {
-      records.unshift({
+    function addRecord(draw) {
+      const number = typeof draw === "number" ? draw : draw.result;
+      const time = formatDateTime(new Date());
+      const roundId = typeof draw === "number" ? undefined : draw.roundId;
+      const record = {
         number,
-        time: formatDateTime(new Date())
+        time,
+        duration: spinDuration,
+        roundId,
+        hash: typeof draw === "number" ? undefined : draw.hash
+      };
+
+      records.unshift(record);
+      fullRecords.unshift({
+        roundId: roundId || "-",
+        number,
+        time,
+        duration: spinDuration
       });
       saveRecords();
+      saveFullRecords();
       renderRecords();
+      renderFullRecords();
     }
 
     function setBusy(isBusy) {
@@ -1290,31 +1929,64 @@
       startBtn.textContent = isBusy ? "旋转中" : "开始旋转";
     }
 
-    function spin() {
+    async function spin() {
       if (spinning) return;
+      if (!isAuthenticated()) {
+        showLoginMode("请先登录后再操作。");
+        return;
+      }
 
       setBusy(true);
       updateDuration(spinDuration);
 
-      const targetIndex = Math.floor(Math.random() * 4);
-      const targetAngles = [45, 315, 225, 135];
-      const offsetInsideQuarter = Math.random() * 56 - 28;
-      const desiredRotation = targetAngles[targetIndex] + offsetInsideQuarter;
+      try {
+        pendingDraw = await createLocalDraw();
+      } catch (error) {
+        setBusy(false);
+        alert(error.message || "当前浏览器无法生成开奖结果。");
+        return;
+      }
+
+      const targetAngles = { 1: 45, 2: 315, 3: 225, 4: 135 };
+      const offsetInsideQuarter = (pendingDraw.hashBytes[0] / 255) * 56 - 28;
+      const desiredRotation = targetAngles[pendingDraw.result] + offsetInsideQuarter;
       const normalizedRotation = ((currentRotation % 360) + 360) % 360;
       const correction = ((desiredRotation - normalizedRotation) + 360) % 360;
-      const fullTurns = 5 + Math.floor(Math.random() * 4);
+      const fullTurns = 5 + (pendingDraw.hashBytes[1] % 4);
 
       currentRotation += fullTurns * 360 + correction;
       wheel.style.transform = `rotate(${currentRotation}deg)`;
     }
 
-    function clearRecords() {
+    function clearRecordsDirect() {
       records = [];
+      fullRecords = [];
       saveRecords();
+      saveFullRecords();
       renderRecords();
+      renderFullRecords();
+    }
+
+    async function clearRecords() {
+      if (!isAuthenticated()) {
+        showLoginMode("请先登录后再操作。");
+        return;
+      }
+
+      const verified = await requestClearRecordsAuth();
+      if (!verified) return;
+
+      if (confirm("确认清空所有结果记录吗？此操作无法撤销。")) {
+        clearRecordsDirect();
+      }
     }
 
     function openSettings() {
+      if (!isAuthenticated()) {
+        showLoginMode("请先登录后再操作。");
+        return;
+      }
+
       settingsOverlay.classList.add("open");
       settingsOverlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
@@ -1462,10 +2134,30 @@
     wheel.addEventListener("transitionend", (event) => {
       if (event.propertyName !== "transform" || !spinning) return;
 
-      addRecord(getPointedNumber(currentRotation));
+      addRecord(pendingDraw || getPointedNumber(currentRotation));
+      pendingDraw = null;
       setBusy(false);
     });
 
+    document.addEventListener("touchstart", collectTouchEntropy, { passive: true });
+    document.addEventListener("touchmove", collectTouchEntropy, { passive: true });
+    document.addEventListener("touchend", collectTouchEntropy, { passive: true });
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (authForm.dataset.mode === "register") {
+        await handleRegister();
+      } else {
+        await handleLogin();
+      }
+    });
+    clearAuthForm.addEventListener("submit", handleClearAuthSubmit);
+    clearAuthCancel.addEventListener("click", () => closeClearAuth(false));
+    fullRecordsBtn.addEventListener("click", openFullRecords);
+    fullRecordsClose.addEventListener("click", closeFullRecords);
+    fullRecordsOverlay.addEventListener("click", (event) => {
+      if (event.target === fullRecordsOverlay) closeFullRecords();
+    });
     startBtn.addEventListener("click", spin);
     clearBtn.addEventListener("click", clearRecords);
     durationSelect.addEventListener("change", (event) => updateDuration(event.target.value));
@@ -1476,6 +2168,7 @@
     });
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeSettings();
+      if (event.key === "Escape") closeFullRecords();
     });
     themeSwitch.addEventListener("change", toggleTheme);
     fullscreenSwitch.addEventListener("change", toggleFullscreen);
@@ -1508,6 +2201,8 @@
     updateLandscapeText();
     updateFullscreenText();
     renderRecords();
+    renderFullRecords();
+    initializeAuthGate();
 
     if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
       window.addEventListener("load", () => {
