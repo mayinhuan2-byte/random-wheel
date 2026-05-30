@@ -154,6 +154,30 @@
       box-shadow: none;
     }
 
+    body.wechat-browser.fullscreen-active .app {
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.wechat-browser.fullscreen-active .dashboard {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+    }
+
+    body.wechat-browser.fullscreen-active .records-field {
+      flex: 1;
+      min-height: 0;
+    }
+
+    body.wechat-browser.fullscreen-active .records-box {
+      flex: 1;
+      height: auto;
+      min-height: 96px;
+      max-height: none;
+    }
+
     .topbar {
       display: flex;
       align-items: center;
@@ -711,6 +735,16 @@
         padding-bottom: 88px;
       }
 
+      body.wechat-browser.fullscreen-active .app {
+        padding-bottom: 12px;
+      }
+
+      body.wechat-browser.fullscreen-active .records-box {
+        height: auto;
+        min-height: 96px;
+        max-height: none;
+      }
+
       .dashboard {
         gap: 10px;
       }
@@ -751,6 +785,16 @@
 
       body.chrome-browser.fullscreen-active .app {
         padding-bottom: 96px;
+      }
+
+      body.wechat-browser.fullscreen-active .app {
+        padding-bottom: 12px;
+      }
+
+      body.wechat-browser.fullscreen-active .records-box {
+        min-height: 88px;
+        height: auto;
+        max-height: none;
       }
 
       .topbar {
@@ -1267,6 +1311,7 @@
 
     function applyPlatformClasses() {
       document.body.classList.toggle("ios-cover", isIosBrowser());
+      document.body.classList.toggle("wechat-browser", /MicroMessenger/.test(navigator.userAgent));
       document.body.classList.toggle("chrome-browser", /Chrome|CriOS/.test(navigator.userAgent) && !/MicroMessenger/.test(navigator.userAgent));
     }
 
