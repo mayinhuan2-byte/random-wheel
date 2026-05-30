@@ -89,47 +89,6 @@
       backdrop-filter: blur(22px);
     }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .app-title {
-      margin: 0;
-      color: var(--text);
-      font-size: clamp(1.35rem, 6vw, 1.75rem);
-      line-height: 1.1;
-      font-weight: 900;
-      letter-spacing: 0;
-      text-shadow: 0 0 14px rgba(96, 165, 250, 0.28);
-    }
-
-    .settings-btn {
-      width: 46px;
-      height: 46px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      color: var(--text);
-      background: var(--panel-strong);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 10px 22px rgba(0, 0, 0, 0.12);
-      cursor: pointer;
-      font-size: 1.32rem;
-      line-height: 1;
-      transition: transform 0.18s ease, border-color 0.18s ease;
-    }
-
-    .settings-btn:hover {
-      transform: translateY(-1px);
-      border-color: var(--line-bright);
-    }
-
     .wheel-zone {
       display: grid;
       place-items: center;
@@ -239,13 +198,20 @@
 
     .field-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
     .field {
       display: grid;
       gap: 8px;
+      min-width: 0;
     }
 
     .field label,
@@ -320,6 +286,10 @@
       color: var(--text);
       font-weight: 800;
       font-variant-numeric: tabular-nums;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .btn {
@@ -356,6 +326,22 @@
       box-shadow:
         0 10px 22px rgba(59, 130, 246, 0.18),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .secondary-btn {
+      background: linear-gradient(180deg, rgba(133, 151, 174, 0.95), rgba(105, 121, 144, 0.95));
+      box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    body.light .secondary-btn {
+      color: #10203b;
+      background: linear-gradient(180deg, #edf4ff, #dbe7f7);
+      box-shadow:
+        inset 1px 1px 3px rgba(130, 150, 180, 0.12),
+        inset -2px -2px 5px rgba(255, 255, 255, 0.82),
+        0 8px 18px rgba(72, 95, 130, 0.08);
     }
 
     .current-result {
@@ -442,149 +428,6 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
-    .settings-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      display: grid;
-      place-items: end center;
-      padding: 16px;
-      background: rgba(2, 8, 18, 0.52);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease;
-    }
-
-    .settings-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .settings-sheet {
-      width: min(520px, 100%);
-      padding: 18px;
-      border: 1px solid var(--line-bright);
-      border-radius: 22px;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 34%),
-        var(--panel);
-      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.38);
-      backdrop-filter: blur(24px);
-      transform: translateY(22px);
-      transition: transform 0.24s ease;
-    }
-
-    .settings-overlay.open .settings-sheet {
-      transform: translateY(0);
-    }
-
-    .sheet-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .sheet-title {
-      margin: 0;
-      font-size: 1.18rem;
-      font-weight: 900;
-    }
-
-    .sheet-close {
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      color: var(--text);
-      background: var(--panel-strong);
-      cursor: pointer;
-      font-size: 1.4rem;
-      line-height: 1;
-    }
-
-    .setting-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .setting-row {
-      min-height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel-strong);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    }
-
-    .setting-copy {
-      display: grid;
-      gap: 3px;
-    }
-
-    .setting-name {
-      color: var(--text);
-      font-weight: 900;
-    }
-
-    .setting-note {
-      color: var(--muted-2);
-      font-size: 0.78rem;
-      line-height: 1.35;
-    }
-
-    .switch {
-      position: relative;
-      flex: 0 0 54px;
-      width: 54px;
-      height: 32px;
-      display: inline-block;
-    }
-
-    .switch input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .switch-track {
-      position: absolute;
-      inset: 0;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(112, 128, 150, 0.52);
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.18);
-      cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease;
-    }
-
-    .switch-track::after {
-      content: "";
-      position: absolute;
-      left: 4px;
-      top: 4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.28);
-      transition: transform 0.2s ease;
-    }
-
-    .switch input:checked + .switch-track {
-      border-color: rgba(96, 165, 250, 0.78);
-      background: linear-gradient(180deg, #69adff, #3b82f6);
-    }
-
-    .switch input:checked + .switch-track::after {
-      transform: translateX(22px);
-    }
-
     @media (max-width: 420px) {
       body {
         padding: 0;
@@ -602,7 +445,8 @@
         width: min(300px, calc(100vw - 92px));
       }
 
-      .field-grid {
+      .field-grid,
+      .mode-grid {
         gap: 9px;
       }
 
@@ -634,11 +478,6 @@
         align-items: center;
         padding: 10px 14px;
         border-radius: 16px;
-      }
-
-      .topbar {
-        grid-column: 1 / -1;
-        margin-bottom: 0;
       }
 
       .wheel-zone {
@@ -1051,7 +890,31 @@
       }
 
       fullscreenSwitch.checked = Boolean(document.fullscreenElement);
-      fullscreenNote.textContent = document.fullscreenElement ? "当前处于全屏模式" : "隐藏浏览器界面";
+      fullscreenNote.textContent = document.fullscreenElement ? "已全屏，正在使用横屏布局" : "全屏后尝试自动横屏";
+    }
+
+    async function lockLandscapeIfSupported() {
+      if (!screen.orientation || !screen.orientation.lock) {
+        fullscreenNote.textContent = "已全屏，当前浏览器不支持自动横屏";
+        return;
+      }
+
+      try {
+        await screen.orientation.lock("landscape");
+        fullscreenNote.textContent = "已全屏，横屏已锁定";
+      } catch (error) {
+        fullscreenNote.textContent = "已全屏，请打开系统自动旋转或手动横屏";
+      }
+    }
+
+    function unlockOrientationIfSupported() {
+      if (screen.orientation && screen.orientation.unlock) {
+        try {
+          screen.orientation.unlock();
+        } catch (error) {
+          // Some in-app browsers expose the API but block unlock.
+        }
+      }
     }
 
     async function toggleFullscreen() {
@@ -1069,11 +932,13 @@
       try {
         if (fullscreenSwitch.checked) {
           await document.documentElement.requestFullscreen();
+          await lockLandscapeIfSupported();
         } else if (document.fullscreenElement) {
+          unlockOrientationIfSupported();
           await document.exitFullscreen();
         }
       } catch (error) {
-        fullscreenNote.textContent = "当前浏览器无法全屏";
+        fullscreenNote.textContent = "当前浏览器无法全屏或自动横屏";
         fullscreenSwitch.checked = Boolean(document.fullscreenElement);
         window.setTimeout(updateFullscreenText, 1200);
       }
@@ -1102,7 +967,12 @@
     soundSwitch.addEventListener("change", () => localStorage.setItem("random-wheel-sound", soundSwitch.checked ? "on" : "off"));
     vibrationSwitch.addEventListener("change", () => localStorage.setItem("random-wheel-vibration", vibrationSwitch.checked ? "on" : "off"));
     animationSwitch.addEventListener("change", () => localStorage.setItem("random-wheel-animation", animationSwitch.checked ? "on" : "off"));
-    document.addEventListener("fullscreenchange", updateFullscreenText);
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        unlockOrientationIfSupported();
+      }
+      updateFullscreenText();
+    });
 
     updateDuration(spinDuration);
     applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
