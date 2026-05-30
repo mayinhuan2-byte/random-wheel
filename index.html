@@ -908,6 +908,17 @@
 
         <label class="setting-row">
           <span class="setting-copy">
+            <span class="setting-name">横屏模式</span>
+            <span class="setting-note" id="landscapeNote">安卓可尝试锁定横屏</span>
+          </span>
+          <span class="switch">
+            <input id="landscapeSwitch" type="checkbox">
+            <span class="switch-track"></span>
+          </span>
+        </label>
+
+        <label class="setting-row">
+          <span class="setting-copy">
             <span class="setting-name">音效开关</span>
             <span class="setting-note">预留扩展项</span>
           </span>
@@ -960,6 +971,8 @@
     const themeSwitch = document.getElementById("themeSwitch");
     const fullscreenSwitch = document.getElementById("fullscreenSwitch");
     const fullscreenNote = document.getElementById("fullscreenNote");
+    const landscapeSwitch = document.getElementById("landscapeSwitch");
+    const landscapeNote = document.getElementById("landscapeNote");
     const soundSwitch = document.getElementById("soundSwitch");
     const vibrationSwitch = document.getElementById("vibrationSwitch");
     const animationSwitch = document.getElementById("animationSwitch");
@@ -1150,6 +1163,43 @@
       fullscreenNote.textContent = document.fullscreenElement ? "已全屏，旋转手机可切换横屏" : "隐藏浏览器界面，不强制横屏";
     }
 
+    function updateLandscapeText() {
+      if (isIosBrowser()) {
+        landscapeNote.textContent = "苹果手机请直接旋转设备";
+        landscapeSwitch.checked = false;
+        return;
+      }
+
+      landscapeNote.textContent = landscapeSwitch.checked ? "已尝试锁定横屏" : "安卓可尝试锁定横屏";
+    }
+
+    async function lockLandscapeIfSupported() {
+      if (isIosBrowser()) {
+        landscapeNote.textContent = "苹果手机请直接旋转设备";
+        landscapeSwitch.checked = false;
+        return;
+      }
+
+      if (!screen.orientation || !screen.orientation.lock) {
+        landscapeNote.textContent = "当前浏览器不支持自动横屏";
+        landscapeSwitch.checked = false;
+        return;
+      }
+
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        }
+        await screen.orientation.lock("landscape");
+        landscapeNote.textContent = "横屏已锁定";
+        fullscreenSwitch.checked = true;
+        updateFullscreenText();
+      } catch (error) {
+        landscapeNote.textContent = "请打开系统自动旋转或用 Chrome 测试";
+        landscapeSwitch.checked = false;
+      }
+    }
+
     function unlockOrientationIfSupported() {
       if (screen.orientation && screen.orientation.unlock) {
         try {
@@ -1157,6 +1207,15 @@
         } catch (error) {
           // Some in-app browsers expose the API but block unlock.
         }
+      }
+    }
+
+    async function toggleLandscape() {
+      if (landscapeSwitch.checked) {
+        await lockLandscapeIfSupported();
+      } else {
+        unlockOrientationIfSupported();
+        landscapeNote.textContent = "安卓可尝试锁定横屏";
       }
     }
 
@@ -1206,12 +1265,15 @@
     });
     themeSwitch.addEventListener("change", toggleTheme);
     fullscreenSwitch.addEventListener("change", toggleFullscreen);
+    landscapeSwitch.addEventListener("change", toggleLandscape);
     soundSwitch.addEventListener("change", () => localStorage.setItem("random-wheel-sound", soundSwitch.checked ? "on" : "off"));
     vibrationSwitch.addEventListener("change", () => localStorage.setItem("random-wheel-vibration", vibrationSwitch.checked ? "on" : "off"));
     animationSwitch.addEventListener("change", () => localStorage.setItem("random-wheel-animation", animationSwitch.checked ? "on" : "off"));
     document.addEventListener("fullscreenchange", () => {
       if (!document.fullscreenElement) {
         unlockOrientationIfSupported();
+        landscapeSwitch.checked = false;
+        updateLandscapeText();
       }
       updateFullscreenText();
     });
@@ -1221,6 +1283,7 @@
     soundSwitch.checked = localStorage.getItem("random-wheel-sound") === "on";
     vibrationSwitch.checked = localStorage.getItem("random-wheel-vibration") === "on";
     animationSwitch.checked = localStorage.getItem("random-wheel-animation") !== "off";
+    updateLandscapeText();
     updateFullscreenText();
     renderRecords();
   </script>
