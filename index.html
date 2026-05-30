@@ -703,11 +703,15 @@
         border-radius: 0;
         border-left: 0;
         border-right: 0;
-        padding: 12px 14px 24px;
+        padding: 12px 14px 56px;
+      }
+
+      .dashboard {
+        gap: 10px;
       }
 
       .wheel-wrap {
-        width: min(300px, calc(100vw - 92px));
+        width: min(285px, calc(100vw - 92px));
       }
 
       .field-grid,
@@ -725,6 +729,56 @@
 
       .stat-card span {
         font-size: 0.76rem;
+      }
+
+      .records-box {
+        min-height: 96px;
+        max-height: 128px;
+        overflow-y: auto;
+      }
+    }
+
+    @media (max-width: 380px) and (max-height: 760px) {
+      .app {
+        padding-bottom: 72px;
+      }
+
+      .topbar {
+        min-height: 42px;
+        margin-bottom: 8px;
+      }
+
+      .app-title {
+        font-size: 1.7rem;
+      }
+
+      .wheel-zone {
+        margin-bottom: 14px;
+      }
+
+      .wheel-wrap {
+        width: min(250px, calc(100vw - 86px));
+      }
+
+      .control,
+      .result-pill,
+      .btn {
+        min-height: 42px;
+      }
+
+      .current-result {
+        min-height: 46px;
+        font-size: 1.02rem;
+      }
+
+      .stat-card {
+        min-height: 66px;
+        padding: 8px 4px;
+      }
+
+      .records-box {
+        min-height: 82px;
+        max-height: 98px;
       }
     }
 
