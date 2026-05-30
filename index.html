@@ -2,7 +2,13 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08111f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="随机数罗盘">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
   <title>随机数罗盘</title>
   <style>
     :root {
@@ -775,11 +781,40 @@
       applyTheme(document.body.classList.contains("light") ? "dark" : "light");
     }
 
+    function isIosBrowser() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    }
+
+    function isStandaloneMode() {
+      return window.navigator.standalone === true ||
+        window.matchMedia("(display-mode: standalone)").matches;
+    }
+
     function updateFullscreenText() {
+      if (isIosBrowser() && !isStandaloneMode() && !document.fullscreenEnabled) {
+        fullscreenBtn.textContent = "添加到主屏幕";
+        return;
+      }
+
+      if (isStandaloneMode()) {
+        fullscreenBtn.textContent = "已全屏";
+        return;
+      }
+
       fullscreenBtn.textContent = document.fullscreenElement ? "退出全屏" : "全屏模式";
     }
 
     async function toggleFullscreen() {
+      if (isIosBrowser() && !isStandaloneMode() && !document.fullscreenEnabled) {
+        alert("iPhone Safari 不支持网页按钮直接隐藏地址栏和底部工具栏。请点击 Safari 底部分享按钮，然后选择“添加到主屏幕”，再从桌面图标打开。");
+        return;
+      }
+
+      if (isStandaloneMode()) {
+        return;
+      }
+
       try {
         if (document.fullscreenElement) {
           await document.exitFullscreen();
