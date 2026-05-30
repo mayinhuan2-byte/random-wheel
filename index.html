@@ -13,6 +13,7 @@
   <style>
     :root {
       color-scheme: dark;
+      --app-height: 100vh;
       --bg: #08111f;
       --panel: rgba(17, 27, 45, 0.82);
       --panel-strong: rgba(29, 43, 66, 0.82);
@@ -41,6 +42,10 @@
       background: var(--bg);
     }
 
+    html {
+      height: -webkit-fill-available;
+    }
+
     html:fullscreen,
     html:fullscreen body {
       width: 100vw;
@@ -60,6 +65,7 @@
 
     body {
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       padding: 20px 14px;
       color: var(--text);
       background:
@@ -75,6 +81,11 @@
     body.fullscreen-active {
       padding: 0;
       place-items: stretch;
+      width: 100vw;
+      width: 100dvw;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
     }
 
     body.light {
@@ -114,10 +125,33 @@
     }
 
     body.fullscreen-active .app {
-      width: 100%;
+      width: 100vw;
+      width: 100dvw;
       min-height: 100vh;
+      min-height: 100dvh;
       border: 0;
       border-radius: 0;
+    }
+
+    body.ios-cover.fullscreen-active {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      width: 100dvw;
+      height: 100vh;
+      height: 100dvh;
+      min-height: -webkit-fill-available;
+      overflow: hidden;
+    }
+
+    body.ios-cover.fullscreen-active .app {
+      width: 100vw;
+      width: 100dvw;
+      min-height: 100vh;
+      min-height: 100dvh;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .topbar {
@@ -708,7 +742,10 @@
 
       .app {
         width: 100vw;
+        width: 100dvw;
         min-height: 100vh;
+        min-height: 100dvh;
+        min-height: var(--app-height);
         display: grid;
         grid-template-columns: minmax(210px, 0.82fr) minmax(300px, 1fr);
         grid-template-rows: auto minmax(0, 1fr);
@@ -721,6 +758,8 @@
 
       body.fullscreen-active .app {
         min-height: 100vh;
+        min-height: 100dvh;
+        min-height: var(--app-height);
         border-radius: 0;
       }
 
@@ -1161,6 +1200,15 @@
         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     }
 
+    function applyPlatformClasses() {
+      document.body.classList.toggle("ios-cover", isIosBrowser());
+    }
+
+    function updateViewportHeight() {
+      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty("--app-height", `${height}px`);
+    }
+
     function isStandaloneMode() {
       return window.navigator.standalone === true ||
         window.matchMedia("(display-mode: standalone)").matches;
@@ -1297,10 +1345,18 @@
         landscapeSwitch.checked = false;
         updateLandscapeText();
       }
+      updateViewportHeight();
       updateFullscreenText();
     });
+    window.addEventListener("resize", updateViewportHeight);
+    window.addEventListener("orientationchange", () => window.setTimeout(updateViewportHeight, 250));
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", updateViewportHeight);
+    }
 
     updateDuration(spinDuration);
+    applyPlatformClasses();
+    updateViewportHeight();
     applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
     soundSwitch.checked = localStorage.getItem("random-wheel-sound") === "on";
     vibrationSwitch.checked = localStorage.getItem("random-wheel-vibration") === "on";
