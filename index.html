@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>随机数罗盘</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #08111f;
+      --panel: rgba(17, 27, 45, 0.82);
+      --panel-strong: rgba(29, 43, 66, 0.82);
+      --line: rgba(145, 175, 222, 0.26);
+      --line-bright: rgba(105, 167, 255, 0.45);
+      --text: #f8fbff;
+      --muted: #bdd2f4;
+      --muted-2: #7f90aa;
+      --blue: #3b82f6;
+      --blue-soft: #60a5fa;
+      --red: #f43f46;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --button-muted: #708096;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 20px 14px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(51, 120, 255, 0.2), transparent 34%),
+        radial-gradient(circle at 12% 28%, rgba(34, 197, 94, 0.1), transparent 26%),
+        linear-gradient(180deg, #0b1424 0%, var(--bg) 100%);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif;
+      display: grid;
+      place-items: start center;
+    }
+
+    body.light {
+      color-scheme: light;
+      --bg: #eef4ff;
+      --panel: rgba(255, 255, 255, 0.78);
+      --panel-strong: rgba(242, 247, 255, 0.9);
+      --line: rgba(72, 95, 130, 0.2);
+      --line-bright: rgba(18, 104, 238, 0.32);
+      --text: #142039;
+      --muted: #405473;
+      --muted-2: #687895;
+      --button-muted: #d8e3f2;
+      --shadow: 0 24px 60px rgba(33, 58, 95, 0.16);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(18, 104, 238, 0.16), transparent 34%),
+        radial-gradient(circle at 12% 28%, rgba(34, 197, 94, 0.12), transparent 26%),
+        linear-gradient(180deg, #f7fbff 0%, var(--bg) 100%);
+    }
+
+    button,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      width: min(520px, 100%);
+      padding: 24px 20px 30px;
+      border: 1px solid var(--line-bright);
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.06), transparent 32%),
+        var(--panel);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(22px);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 8vw, 3rem);
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow:
+        0 0 12px rgba(96, 165, 250, 0.38),
+        0 4px 0 rgba(0, 0, 0, 0.24);
+    }
+
+    .subtitle {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: clamp(0.9rem, 3.6vw, 1.02rem);
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .wheel-zone {
+      display: grid;
+      place-items: center;
+      margin-bottom: 24px;
+      padding-right: 34px;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: min(330px, calc(100vw - 102px));
+      aspect-ratio: 1;
+    }
+
+    .wheel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          from 0deg,
+          var(--red) 0deg 90deg,
+          var(--blue) 90deg 180deg,
+          var(--green) 180deg 270deg,
+          var(--yellow) 270deg 360deg
+        );
+      transform: rotate(0deg);
+      transition: transform 3s cubic-bezier(0.14, 0.78, 0.16, 1);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 12px 0 rgba(0, 0, 0, 0.12),
+        0 18px 38px rgba(0, 0, 0, 0.32),
+        0 0 48px rgba(59, 130, 246, 0.12);
+    }
+
+    .wheel-number {
+      position: absolute;
+      z-index: 2;
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-size: clamp(2rem, 8vw, 2.75rem);
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 4px 5px 0 rgba(0, 0, 0, 0.22);
+      transform: translate(-50%, -50%);
+      user-select: none;
+    }
+
+    .wheel-number-1 { left: 66%; top: 28%; }
+    .wheel-number-2 { left: 72%; top: 66%; }
+    .wheel-number-3 { left: 34%; top: 66%; }
+    .wheel-number-4 {
+      left: 28%;
+      top: 28%;
+      color: #111827;
+      text-shadow: 3px 4px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .hub {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 50%;
+      width: 24%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #0d1727;
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.03),
+        0 8px 24px rgba(0, 0, 0, 0.35);
+      transform: translate(-50%, -50%);
+    }
+
+    body.light .hub {
+      background: #eef4ff;
+    }
+
+    .pointer {
+      position: absolute;
+      right: -28px;
+      top: 50%;
+      z-index: 5;
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-right: 42px solid #ffffff;
+      transform: translateY(-50%);
+      filter: drop-shadow(0 7px 14px rgba(0, 0, 0, 0.24));
+    }
+
+    .dashboard {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-grid,
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label,
+    .records-label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .control,
+    .result-pill,
+    .current-result,
+    .stat-card,
+    .records-box {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 12px 24px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      color: var(--text);
+      pointer-events: none;
+      transform: translateY(-70%) rotate(45deg);
+    }
+
+    .control,
+    .result-pill {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      color: var(--text);
+      outline: none;
+    }
+
+    select.control {
+      appearance: none;
+      padding: 0 42px 0 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .result-pill {
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      color: var(--text);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn {
+      min-height: 50px;
+      border: 0;
+      border-radius: 14px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 1.08rem;
+      font-weight: 900;
+      letter-spacing: 0;
+      transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      cursor: wait;
+      opacity: 0.68;
+      transform: none;
+    }
+
+    .start-btn {
+      min-height: 56px;
+      background: linear-gradient(180deg, #69adff, #4f94f7);
+      box-shadow:
+        0 14px 28px rgba(59, 130, 246, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+
+    .secondary-btn {
+      background: linear-gradient(180deg, rgba(133, 151, 174, 0.95), rgba(105, 121, 144, 0.95));
+      box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    body.light .secondary-btn {
+      color: #10203b;
+      background: linear-gradient(180deg, #edf4ff, #dbe7f7);
+    }
+
+    .current-result {
+      min-height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: var(--text);
+      font-size: 1.22rem;
+      font-weight: 900;
+    }
+
+    .current-result strong {
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    body.light .current-result strong {
+      color: #142039;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat-card {
+      min-height: 78px;
+      padding: 12px 6px;
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .stat-card strong {
+      color: #ffffff;
+      font-size: 1.65rem;
+      line-height: 1;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    body.light .stat-card strong {
+      color: #142039;
+    }
+
+    .records-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .records-box {
+      width: 100%;
+      min-height: 112px;
+      max-height: 240px;
+      padding: 14px;
+      overflow: auto;
+      resize: vertical;
+      border-radius: 14px;
+      color: var(--text);
+      outline: none;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .records-box::placeholder {
+      color: var(--muted-2);
+    }
+
+    .clear-btn {
+      background: linear-gradient(180deg, #ff4b52, #ef3840);
+      box-shadow:
+        0 14px 28px rgba(244, 63, 70, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 0;
+      }
+
+      .app {
+        min-height: 100vh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding: 22px 14px 24px;
+      }
+
+      .wheel-wrap {
+        width: min(300px, calc(100vw - 92px));
+      }
+
+      .field-grid,
+      .mode-grid {
+        gap: 9px;
+      }
+
+      .stats-grid {
+        gap: 7px;
+      }
+
+      .stat-card {
+        min-height: 72px;
+      }
+
+      .stat-card span {
+        font-size: 0.76rem;
+      }
+    }
+
+    @media (max-width: 760px) and (orientation: landscape) {
+      body {
+        padding: 10px;
+      }
+
+      .app {
+        width: min(980px, 100%);
+        display: grid;
+        grid-template-columns: minmax(280px, 0.82fr) minmax(340px, 1fr);
+        gap: 14px 18px;
+        align-items: center;
+        padding: 18px;
+      }
+
+      .hero {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        margin-top: 6px;
+        font-size: 0.88rem;
+      }
+
+      .wheel-zone {
+        margin-bottom: 0;
+      }
+
+      .wheel-wrap {
+        width: min(285px, 39vw);
+      }
+
+      .dashboard {
+        gap: 9px;
+      }
+
+      .field label,
+      .records-label {
+        font-size: 0.78rem;
+      }
+
+      .control,
+      .result-pill,
+      .btn {
+        min-height: 42px;
+        border-radius: 11px;
+        font-size: 0.92rem;
+      }
+
+      .current-result {
+        min-height: 44px;
+        font-size: 1rem;
+      }
+
+      .stat-card {
+        min-height: 58px;
+        padding: 7px 4px;
+      }
+
+      .stat-card span {
+        font-size: 0.68rem;
+      }
+
+      .stat-card strong {
+        font-size: 1.25rem;
+      }
+
+      .records-box {
+        min-height: 76px;
+        max-height: 108px;
+        padding: 10px;
+        font-size: 0.78rem;
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <h1>随机数罗盘</h1>
+      <p class="subtitle">点击开始，指针指向的数字会自动记录结果与时间</p>
+    </header>
+
+    <section class="wheel-zone" aria-label="随机数罗盘">
+      <div class="wheel-wrap">
+        <div class="wheel" id="wheel">
+          <span class="wheel-number wheel-number-1">1</span>
+          <span class="wheel-number wheel-number-2">2</span>
+          <span class="wheel-number wheel-number-3">3</span>
+          <span class="wheel-number wheel-number-4">4</span>
+        </div>
+        <div class="hub" aria-hidden="true"></div>
+        <div class="pointer" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="dashboard" aria-label="控制与结果面板">
+      <div class="field-grid">
+        <div class="field">
+          <label for="durationSelect">旋转时长</label>
+          <div class="select-wrap">
+            <select class="control" id="durationSelect">
+              <option value="1">1 秒</option>
+              <option value="2">2 秒</option>
+              <option value="3">3 秒</option>
+              <option value="4">4 秒</option>
+              <option value="5">5 秒</option>
+              <option value="6">6 秒</option>
+              <option value="8">8 秒</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="latestResult">最新结果</label>
+          <div class="result-pill" id="latestResult">等待开始</div>
+        </div>
+      </div>
+
+      <button class="btn start-btn" id="startBtn" type="button">开始旋转</button>
+
+      <div class="mode-grid">
+        <button class="btn secondary-btn" id="themeBtn" type="button">浅色模式</button>
+        <button class="btn secondary-btn" id="fullscreenBtn" type="button">全屏模式</button>
+      </div>
+
+      <div class="current-result">当前结果：<strong id="currentResult">-</strong></div>
+
+      <div class="stats-grid" aria-label="数字出现次数统计">
+        <div class="stat-card">
+          <span>数字 1</span>
+          <strong id="stat1">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>数字 2</span>
+          <strong id="stat2">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>数字 3</span>
+          <strong id="stat3">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>数字 4</span>
+          <strong id="stat4">0</strong>
+        </div>
+      </div>
+
+      <label class="records-field" for="recordsBox">
+        <span class="records-label">结果记录</span>
+        <textarea class="records-box" id="recordsBox" readonly placeholder="结果和时间会保留在这里"></textarea>
+      </label>
+
+      <button class="btn clear-btn" id="clearBtn" type="button">清空记录</button>
+      <p class="hint">提示：手机浏览器打开 GitHub Pages 链接即可使用</p>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "random-wheel-records";
+    const DURATION_KEY = "random-wheel-duration";
+    const THEME_KEY = "random-wheel-theme";
+
+    const wheel = document.getElementById("wheel");
+    const startBtn = document.getElementById("startBtn");
+    const durationSelect = document.getElementById("durationSelect");
+    const latestResult = document.getElementById("latestResult");
+    const currentResult = document.getElementById("currentResult");
+    const themeBtn = document.getElementById("themeBtn");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const recordsBox = document.getElementById("recordsBox");
+    const statEls = {
+      1: document.getElementById("stat1"),
+      2: document.getElementById("stat2"),
+      3: document.getElementById("stat3"),
+      4: document.getElementById("stat4")
+    };
+
+    let currentRotation = 0;
+    let spinning = false;
+    let records = loadRecords();
+    let spinDuration = loadDuration();
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function formatDateTime(date) {
+      return [
+        date.getFullYear(),
+        "-",
+        pad(date.getMonth() + 1),
+        "-",
+        pad(date.getDate()),
+        " ",
+        pad(date.getHours()),
+        ":",
+        pad(date.getMinutes()),
+        ":",
+        pad(date.getSeconds())
+      ].join("");
+    }
+
+    function loadRecords() {
+      try {
+        const rawRecords = localStorage.getItem(STORAGE_KEY);
+        const parsedRecords = rawRecords ? JSON.parse(rawRecords) : [];
+        return Array.isArray(parsedRecords) ? parsedRecords : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveRecords() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
+
+    function loadDuration() {
+      const storedDuration = Number(localStorage.getItem(DURATION_KEY));
+      return [1, 2, 3, 4, 5, 6, 8].includes(storedDuration) ? storedDuration : 3;
+    }
+
+    function updateDuration(value) {
+      spinDuration = Number(value) || 3;
+      durationSelect.value = String(spinDuration);
+      localStorage.setItem(DURATION_KEY, String(spinDuration));
+      wheel.style.transition = `transform ${spinDuration}s cubic-bezier(0.14, 0.78, 0.16, 1)`;
+    }
+
+    function getStats() {
+      return records.reduce((stats, record) => {
+        if (stats[record.number] !== undefined) {
+          stats[record.number] += 1;
+        }
+
+        return stats;
+      }, { 1: 0, 2: 0, 3: 0, 4: 0 });
+    }
+
+    function renderRecords() {
+      const latest = records[0];
+      const stats = getStats();
+
+      latestResult.textContent = latest ? latest.number : "等待开始";
+      currentResult.textContent = latest ? latest.number : "-";
+
+      Object.keys(statEls).forEach((number) => {
+        statEls[number].textContent = stats[number];
+      });
+
+      recordsBox.value = records
+        .map((record) => `结果：${record.number}    时间：${record.time}`)
+        .join("\n");
+      recordsBox.scrollTop = 0;
+    }
+
+    function getPointedNumber(rotation) {
+      const normalized = ((rotation % 360) + 360) % 360;
+      const pointerAngleOnWheel = (90 - normalized + 360) % 360;
+
+      if (pointerAngleOnWheel >= 0 && pointerAngleOnWheel < 90) return 1;
+      if (pointerAngleOnWheel >= 90 && pointerAngleOnWheel < 180) return 2;
+      if (pointerAngleOnWheel >= 180 && pointerAngleOnWheel < 270) return 3;
+      return 4;
+    }
+
+    function addRecord(number) {
+      records.unshift({
+        number,
+        time: formatDateTime(new Date())
+      });
+      saveRecords();
+      renderRecords();
+    }
+
+    function setBusy(isBusy) {
+      spinning = isBusy;
+      startBtn.disabled = isBusy;
+      durationSelect.disabled = isBusy;
+      startBtn.textContent = isBusy ? "旋转中" : "开始旋转";
+    }
+
+    function spin() {
+      if (spinning) return;
+
+      setBusy(true);
+      updateDuration(spinDuration);
+
+      const targetIndex = Math.floor(Math.random() * 4);
+      const targetAngles = [45, 315, 225, 135];
+      const offsetInsideQuarter = Math.random() * 56 - 28;
+      const desiredRotation = targetAngles[targetIndex] + offsetInsideQuarter;
+      const normalizedRotation = ((currentRotation % 360) + 360) % 360;
+      const correction = ((desiredRotation - normalizedRotation) + 360) % 360;
+      const fullTurns = 5 + Math.floor(Math.random() * 4);
+
+      currentRotation += fullTurns * 360 + correction;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+    }
+
+    function clearRecords() {
+      records = [];
+      saveRecords();
+      renderRecords();
+    }
+
+    function applyTheme(theme) {
+      const isLight = theme === "light";
+      document.body.classList.toggle("light", isLight);
+      themeBtn.textContent = isLight ? "深色模式" : "浅色模式";
+      localStorage.setItem(THEME_KEY, isLight ? "light" : "dark");
+    }
+
+    function toggleTheme() {
+      applyTheme(document.body.classList.contains("light") ? "dark" : "light");
+    }
+
+    function updateFullscreenText() {
+      fullscreenBtn.textContent = document.fullscreenElement ? "退出全屏" : "全屏模式";
+    }
+
+    async function toggleFullscreen() {
+      try {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else {
+          await document.documentElement.requestFullscreen();
+        }
+      } catch (error) {
+        fullscreenBtn.textContent = "无法全屏";
+        window.setTimeout(updateFullscreenText, 1200);
+      }
+    }
+
+    wheel.addEventListener("transitionend", (event) => {
+      if (event.propertyName !== "transform" || !spinning) return;
+
+      addRecord(getPointedNumber(currentRotation));
+      setBusy(false);
+    });
+
+    startBtn.addEventListener("click", spin);
+    clearBtn.addEventListener("click", clearRecords);
+    durationSelect.addEventListener("change", (event) => updateDuration(event.target.value));
+    themeBtn.addEventListener("click", toggleTheme);
+    fullscreenBtn.addEventListener("click", toggleFullscreen);
+    document.addEventListener("fullscreenchange", updateFullscreenText);
+
+    updateDuration(spinDuration);
+    applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
+    updateFullscreenText();
+    renderRecords();
+  </script>
+</body>
+</html>
