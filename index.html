@@ -79,7 +79,7 @@
 
     .app {
       width: min(520px, 100%);
-      padding: 24px 20px 30px;
+      padding: 16px 20px 30px;
       border: 1px solid var(--line-bright);
       border-radius: 22px;
       background:
@@ -87,30 +87,6 @@
         var(--panel);
       box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(22px);
-    }
-
-    .hero {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 8vw, 3rem);
-      line-height: 1.08;
-      font-weight: 900;
-      letter-spacing: 0;
-      text-shadow:
-        0 0 12px rgba(96, 165, 250, 0.38),
-        0 4px 0 rgba(0, 0, 0, 0.24);
-    }
-
-    .subtitle {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: clamp(0.9rem, 3.6vw, 1.02rem);
-      line-height: 1.55;
-      font-weight: 700;
     }
 
     .wheel-zone {
@@ -432,7 +408,7 @@
         border-radius: 0;
         border-left: 0;
         border-right: 0;
-        padding: 22px 14px 24px;
+        padding: 12px 14px 24px;
       }
 
       .wheel-wrap {
@@ -468,21 +444,7 @@
         grid-template-columns: minmax(280px, 0.82fr) minmax(340px, 1fr);
         gap: 14px 18px;
         align-items: center;
-        padding: 18px;
-      }
-
-      .hero {
-        grid-column: 1 / -1;
-        margin-bottom: 0;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .subtitle {
-        margin-top: 6px;
-        font-size: 0.88rem;
+        padding: 12px 18px;
       }
 
       .wheel-zone {
@@ -543,11 +505,6 @@
 </head>
 <body>
   <main class="app">
-    <header class="hero">
-      <h1>随机数罗盘</h1>
-      <p class="subtitle">点击开始，指针指向的数字会自动记录结果与时间</p>
-    </header>
-
     <section class="wheel-zone" aria-label="随机数罗盘">
       <div class="wheel-wrap">
         <div class="wheel" id="wheel">
