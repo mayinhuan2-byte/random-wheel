@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="随机数罗盘图标">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#020817" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#08111f"/>
+  <circle cx="256" cy="256" r="182" fill="#0f172a" filter="url(#shadow)"/>
+  <path d="M256 74a182 182 0 0 1 182 182H256Z" fill="#f43f46"/>
+  <path d="M438 256a182 182 0 0 1-182 182V256Z" fill="#3b82f6"/>
+  <path d="M256 438A182 182 0 0 1 74 256h182Z" fill="#22c55e"/>
+  <path d="M74 256A182 182 0 0 1 256 74v182Z" fill="#facc15"/>
+  <circle cx="256" cy="256" r="56" fill="#08111f"/>
+  <path d="M438 256l48-28v56Z" fill="#ffffff"/>
+  <text x="320" y="197" fill="#ffffff" font-family="Arial, sans-serif" font-size="64" font-weight="900">1</text>
+  <text x="326" y="348" fill="#ffffff" font-family="Arial, sans-serif" font-size="64" font-weight="900">2</text>
+  <text x="158" y="348" fill="#ffffff" font-family="Arial, sans-serif" font-size="64" font-weight="900">3</text>
+  <text x="154" y="197" fill="#111827" font-family="Arial, sans-serif" font-size="64" font-weight="900">4</text>
+</svg>
